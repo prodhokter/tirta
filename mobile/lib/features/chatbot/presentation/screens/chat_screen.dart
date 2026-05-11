@@ -7,7 +7,6 @@ import 'package:tirta/features/chatbot/presentation/providers/chat_provider.dart
 import 'package:tirta/features/chatbot/presentation/widgets/chat_bubble.dart';
 import 'package:tirta/features/chatbot/presentation/widgets/chat_input_field.dart';
 import 'package:tirta/features/chatbot/presentation/widgets/quick_reply_buttons.dart';
-import 'package:tirta/features/chatbot/presentation/widgets/typing_indicator.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key});
@@ -60,7 +59,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final chatState = ref.watch(chatProvider);
 
     ref.listen<ChatState>(chatProvider, (previous, next) {
-      if (previous?.messages.length != next.messages.length) {
+      if (previous?.messages.length != next.messages.length ||
+          (previous?.messages.isNotEmpty == true && next.messages.isNotEmpty &&
+           previous!.messages.last.content != next.messages.last.content)) {
         _scrollToBottom();
       }
     });
@@ -110,8 +111,31 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
 
           // Typing indicator
-          if (chatState.isLoading && chatState.messages.isNotEmpty)
-            const TypingIndicator(),
+          if (chatState.isStreaming && chatState.messages.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.only(left: 16.w, bottom: 8.h),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 14.r,
+                    height: 14.r,
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    'Mengetik...',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: AppColors.textHint,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
           // Input field at bottom
           ChatInputField(
@@ -169,7 +193,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           alignment: message.role == 'user'
               ? Alignment.centerRight
               : Alignment.centerLeft,
-          child: ChatBubble(message: message),
+          child: ChatBubble(
+            message: message,
+            isStreaming: chatState.isStreaming &&
+                index == chatState.messages.length - 1 &&
+                message.role == 'assistant',
+          ),
         );
       },
     );

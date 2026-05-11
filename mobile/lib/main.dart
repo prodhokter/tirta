@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:tirta/app.dart';
 import 'package:tirta/shared/services/supabase_service.dart';
 
@@ -11,6 +13,9 @@ void main() async {
   await dotenv.load(fileName: '.env');
 
   await SupabaseService.initialize();
+
+  await initializeDateFormatting('id_ID', null);
+  Intl.defaultLocale = 'id_ID';
 
   runApp(const ProviderScope(child: TirtaApp()));
 }

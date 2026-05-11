@@ -8,19 +8,21 @@ class ApiService {
   static final ApiService _instance = ApiService._();
   factory ApiService() => _instance;
 
-  late final Dio _dio;
+  static Dio? _dio;
 
   Dio get dio {
+    if (_dio != null) return _dio!;
+
     _dio = Dio(BaseOptions(
       baseUrl: EnvConfig.vpsApiBaseUrl,
       connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 120),
       headers: {
         'Content-Type': 'application/json',
       },
     ));
 
-    _dio.interceptors.add(InterceptorsWrapper(
+    _dio!.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
         final token = SupabaseService.accessToken;
         if (token != null) {
@@ -46,6 +48,6 @@ class ApiService {
       },
     ));
 
-    return _dio;
+    return _dio!;
   }
 }

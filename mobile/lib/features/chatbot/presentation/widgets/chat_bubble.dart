@@ -7,10 +7,12 @@ import 'package:tirta/features/chatbot/domain/entities/chat_message.dart';
 
 class ChatBubble extends StatelessWidget {
   final ChatMessage message;
+  final bool isStreaming;
 
   const ChatBubble({
     super.key,
     required this.message,
+    this.isStreaming = false,
   });
 
   bool get isUser => message.role == 'user';
@@ -41,35 +43,50 @@ class ChatBubble extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 4.r,
                   offset: Offset(0, 2.h),
                 ),
               ],
             ),
-            child: SelectableText(
-              message.content,
-              style: TextStyles.bodyMedium.copyWith(
-                color: isUser ? Colors.white : AppColors.textPrimary,
-                height: 1.5,
-              ),
-            ),
+            child: isStreaming && message.content.isEmpty
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 14.r,
+                        height: 14.r,
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  )
+                : SelectableText(
+                    isStreaming ? '${message.content}▊' : message.content,
+                    style: TextStyles.bodyMedium.copyWith(
+                      color: isUser ? Colors.white : AppColors.textPrimary,
+                      height: 1.5,
+                    ),
+                  ),
           ),
           SizedBox(height: 4.h),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: isUser ? 0 : 4.w,
-            ),
-            child: Text(
-              message.createdAt != null
-                  ? DateFormatter.formatTime(message.createdAt!)
-                  : '',
-              style: TextStyles.caption.copyWith(
-                fontSize: 10.sp,
-                color: AppColors.textHint,
+          if (!isStreaming)
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isUser ? 0 : 4.w,
+              ),
+              child: Text(
+                message.createdAt != null
+                    ? DateFormatter.formatTime(message.createdAt!)
+                    : '',
+                style: TextStyles.caption.copyWith(
+                  fontSize: 10.sp,
+                  color: AppColors.textHint,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

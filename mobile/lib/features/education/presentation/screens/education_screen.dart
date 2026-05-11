@@ -217,7 +217,7 @@ class _EducationScreenState extends ConsumerState<EducationScreen> {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: AppColors.divider.withOpacity(0.4),
+        color: AppColors.divider.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(12.r),
       ),
     );

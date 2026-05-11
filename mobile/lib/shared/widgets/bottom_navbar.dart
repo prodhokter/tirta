@@ -11,6 +11,9 @@ class BottomNavbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: currentIndex,
+      type: BottomNavigationBarType.fixed,
+      selectedFontSize: 10.sp,
+      unselectedFontSize: 10.sp,
       onTap: (index) {
         switch (index) {
           case 0:
@@ -32,28 +35,28 @@ class BottomNavbar extends StatelessWidget {
       },
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined, size: 24.r),
-          activeIcon: Icon(Icons.home, size: 24.r),
+          icon: Icon(Icons.home_outlined, size: 22.r),
+          activeIcon: Icon(Icons.home, size: 22.r),
           label: 'Beranda',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.medical_services_outlined, size: 24.r),
-          activeIcon: Icon(Icons.medical_services, size: 24.r),
+          icon: Icon(Icons.medical_services_outlined, size: 22.r),
+          activeIcon: Icon(Icons.medical_services, size: 22.r),
           label: 'Periksa',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.chat_outlined, size: 24.r),
-          activeIcon: Icon(Icons.chat, size: 24.r),
+          icon: Icon(Icons.chat_outlined, size: 22.r),
+          activeIcon: Icon(Icons.chat, size: 22.r),
           label: 'Chatbot',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.menu_book_outlined, size: 24.r),
-          activeIcon: Icon(Icons.menu_book, size: 24.r),
+          icon: Icon(Icons.menu_book_outlined, size: 22.r),
+          activeIcon: Icon(Icons.menu_book, size: 22.r),
           label: 'Edukasi',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.history_outlined, size: 24.r),
-          activeIcon: Icon(Icons.history, size: 24.r),
+          icon: Icon(Icons.history_outlined, size: 22.r),
+          activeIcon: Icon(Icons.history, size: 22.r),
           label: 'Riwayat',
         ),
       ],

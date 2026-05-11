@@ -43,10 +43,10 @@ class QuickReplyButtons extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.r),
               side: BorderSide(
-                color: AppColors.primary.withOpacity(0.3),
+                color: AppColors.primary.withValues(alpha: 0.3),
               ),
             ),
-            backgroundColor: AppColors.primary.withOpacity(0.05),
+            backgroundColor: AppColors.primary.withValues(alpha: 0.05),
             onPressed: isEnabled ? () => onTap(reply) : null,
           );
         },
