@@ -1,0 +1,93 @@
+# ============================================
+# TIRTA — .gitignore
+# ============================================
+.claude/
+# --- Flutter / Dart ---
+mobile/.dart_tool/
+mobile/.packages
+mobile/.pub-cache/
+mobile/.pub/
+mobile/build/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.*.lock
+mobile/pubspec.lock
+mobile/doc/api/
+mobile/ios/Pods/
+mobile/ios/.symlinks/
+mobile/ios/Flutter/Flutter.framework
+mobile/ios/Flutter/Flutter.podspec
+mobile/ios/Flutter/engine/
+mobile/ios/Flutter/app.flx
+mobile/ios/Flutter/app_snapshot.bin
+mobile/ios/ServiceDefinitions.json
+mobile/ios/Runner/GeneratedPluginRegistrant.*
+mobile/android/.gradle/
+mobile/android/app/debug/
+mobile/android/app/profile/
+mobile/android/app/release/
+mobile/android/build/
+mobile/android/captures/
+mobile/android/local.properties
+mobile/android/keystore.properties
+mobile/android/.externalNativeBuild/
+mobile/android/.cxx/
+mobile/windows/flutter/generated_plugin_registrant.cc
+mobile/windows/flutter/generated_plugin_registrant.h
+mobile/linux/flutter/generated_plugin_registrant.cc
+mobile/linux/flutter/generated_plugin_registrant.h
+mobile/macos/Flutter/GeneratedPluginRegistrant.swift
+mobile/web/favicon.png
+
+# --- Node.js / Backend ---
+backend/node_modules/
+backend/logs/
+backend/*.log
+backend/npm-debug.log*
+backend/.env
+backend/dist/
+
+# --- Environment / Secrets ---
+.env
+.env.local
+.env.production
+mobile/.env
+mobile/.env.local
+*.env
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.iml
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- OS ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# --- Build outputs ---
+*.apk
+*.aab
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.app
+
+# --- Claude / AI ---
+.claude/
+
+# --- Misc ---
+*.lock
+coverage/
+.nyc_output/
