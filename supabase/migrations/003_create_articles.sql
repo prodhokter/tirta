@@ -25,6 +25,13 @@ CREATE POLICY "Authenticated users can view categories"
   TO authenticated
   USING (true);
 
+-- Policy: Anon users can view categories (for browse-before-login)
+CREATE POLICY "Anon users can view categories"
+  ON article_categories
+  FOR SELECT
+  TO anon
+  USING (true);
+
 -- Policy: Service role full access (for seeding)
 CREATE POLICY "Service role full access on categories"
   ON article_categories
@@ -62,6 +69,13 @@ CREATE POLICY "Authenticated users can view articles"
   TO authenticated
   USING (true);
 
+-- Policy: Anon users can view articles (for browse-before-login)
+CREATE POLICY "Anon users can view articles"
+  ON articles
+  FOR SELECT
+  TO anon
+  USING (true);
+
 -- Policy: Service role full access (for seeding and management)
 CREATE POLICY "Service role full access on articles"
   ON articles
@@ -74,16 +88,9 @@ CREATE POLICY "Service role full access on articles"
 -- Indexes for performance
 -- ============================================================================
 
--- Index on category_id for filtering by category
 CREATE INDEX IF NOT EXISTS idx_articles_category_id ON articles(category_id);
-
--- Index on is_featured for quickly fetching featured articles
 CREATE INDEX IF NOT EXISTS idx_articles_featured ON articles(is_featured) WHERE is_featured = TRUE;
-
--- Index on published_at for sorting by newest
 CREATE INDEX IF NOT EXISTS idx_articles_published_at ON articles(published_at DESC);
-
--- Index on slug for fast lookups
 CREATE INDEX IF NOT EXISTS idx_articles_slug ON articles(slug);
 
 -- ============================================================================

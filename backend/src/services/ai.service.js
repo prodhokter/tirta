@@ -54,4 +54,33 @@ async function chat(messages) {
   return responseText;
 }
 
-module.exports = { chat };
+/**
+ * Streaming chat — returns an async iterable of content chunks.
+ */
+async function* chatStream(messages) {
+  const openai = getClient();
+  const model = process.env.AI_MODEL || 'deepseek-v4-flash';
+
+  logger.debug(`AI stream request: model=${model}, messages=${messages.length}`);
+
+  const stream = await openai.chat.completions.create({
+    model,
+    max_tokens: 500,
+    stream: true,
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...messages,
+    ],
+  });
+
+  for await (const chunk of stream) {
+    const content = chunk.choices[0]?.delta?.content;
+    if (content) {
+      yield content;
+    }
+  }
+
+  logger.debug('AI stream completed');
+}
+
+module.exports = { chat, chatStream };
