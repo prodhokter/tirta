@@ -57,38 +57,32 @@ Pastikan semuanya ada centang hijau (✓). Jika ada tanda seru (!) atau silang (
 
 ## 2. Konfigurasi Environment
 
-Aplikasi TIRTA membutuhkan 3 konfigurasi: Supabase URL, Supabase Anon Key, dan VPS API URL.
+Aplikasi TIRTA membutuhkan 3 konfigurasi: Supabase URL, Supabase Anon Key, dan VPS API URL. Caranya sangat mudah — cukup edit file `.env`.
 
-### Cara A: Menggunakan dart-define (Recommended)
+### Langkah-langkah:
 
-Buat file `run.sh` (atau `run.bat` untuk Windows) di folder `mobile/`:
+1. Buka file **`mobile/.env`** di VS Code
+2. Isi nilai yang benar:
 
-**Windows (run.bat):**
-```bat
-@echo off
-flutter run ^
-  --dart-define=SUPABASE_URL=https://project-id-kamu.supabase.co ^
-  --dart-define=SUPABASE_ANON_KEY=eyJhbGci_kamu_di_sini ^
-  --dart-define=VPS_API_BASE_URL=https://tirta-app.web.id/api
-```
-
-**Linux/Mac (run.sh):**
-```bash
-flutter run \
-  --dart-define=SUPABASE_URL=https://project-id-kamu.supabase.co \
-  --dart-define=SUPABASE_ANON_KEY=eyJhbGci_kamu_di_sini \
-  --dart-define=VPS_API_BASE_URL=https://tirta-app.web.id/api
+```env
+SUPABASE_URL=https://project-id-kamu.supabase.co
+SUPABASE_ANON_KEY=eyJhbGci_kamu_di_sini
+VPS_API_BASE_URL=https://tirta-app.web.id/api
 ```
 
 ### Nilai yang harus diisi:
 
-| Variable | Dari Mana |
-|----------|-----------|
-| `SUPABASE_URL` | Supabase Dashboard → Settings → API → Project URL |
-| `SUPABASE_ANON_KEY` | Supabase Dashboard → Settings → API → anon public key |
-| `VPS_API_BASE_URL` | `https://tirta-app.web.id/api` (setelah VPS berhasil deploy) |
+| Variable | Dari Mana | Contoh |
+|----------|-----------|--------|
+| `SUPABASE_URL` | Supabase Dashboard → Settings → API → Project URL | `https://abcdef.supabase.co` |
+| `SUPABASE_ANON_KEY` | Supabase Dashboard → Settings → API → anon public key | `eyJhbGci...` |
+| `VPS_API_BASE_URL` | Setelah VPS berhasil deploy | `https://tirta-app.web.id/api` |
+
+> **PENTING:** File `.env` berisi kredensial — sudah otomatis di-ignore oleh Git, jadi tidak akan ter-upload ke GitHub.
 
 > **Untuk testing tanpa VPS:** Gunakan `https://tirta-app.web.id/api` sebagai URL. Chatbot tidak akan berfungsi sampai VPS terdeploy, tapi fitur lain tetap jalan.
+
+Setelah file `.env` diisi, kamu tinggal `flutter run` — tanpa parameter tambahan apapun.
 
 ---
 
@@ -128,10 +122,7 @@ flutter pub get
 ```bash
 cd "C:\Users\Ibnu Habib\Documents\Kuliah\Tugas\Workshop Perangkat Bergerak\tirta\mobile"
 
-flutter run ^
-  --dart-define=SUPABASE_URL=https://PROJECT-ID-KAMU.supabase.co ^
-  --dart-define=SUPABASE_ANON_KEY=ANON-KEY-KAMU ^
-  --dart-define=VPS_API_BASE_URL=https://tirta-app.web.id/api
+flutter run
 ```
 
 Tunggu sampai aplikasi muncul di emulator. Proses pertama kali bisa memakan waktu **3-5 menit**.
@@ -160,12 +151,8 @@ Tunggu sampai aplikasi muncul di emulator. Proses pertama kali bisa memakan wakt
 # Cek apakah HP terdeteksi
 flutter devices
 
-# Harus muncul HP kamu di daftar devices
 # Jalankan app di HP
-flutter run -d NAMA_DEVICE_KAMU ^
-  --dart-define=SUPABASE_URL=https://PROJECT-ID-KAMU.supabase.co ^
-  --dart-define=SUPABASE_ANON_KEY=ANON-KEY-KAMU ^
-  --dart-define=VPS_API_BASE_URL=https://tirta-app.web.id/api
+flutter run -d NAMA_DEVICE_KAMU
 ```
 
 ---
@@ -177,10 +164,7 @@ Untuk membuat file APK yang bisa diinstall di HP manapun:
 ```bash
 cd "C:\Users\Ibnu Habib\Documents\Kuliah\Tugas\Workshop Perangkat Bergerak\tirta\mobile"
 
-flutter build apk --release ^
-  --dart-define=SUPABASE_URL=https://PROJECT-ID-KAMU.supabase.co ^
-  --dart-define=SUPABASE_ANON_KEY=ANON-KEY-KAMU ^
-  --dart-define=VPS_API_BASE_URL=https://tirta-app.web.id/api
+flutter build apk --release
 ```
 
 File APK akan ada di:
