@@ -19,12 +19,8 @@ class GreetingHeader extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.primaryLight],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16.r),
+        color: AppColors.primary, // Solid soft pastel green
+        borderRadius: BorderRadius.circular(28.r), // Very rounded
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,17 +29,17 @@ class GreetingHeader extends StatelessWidget {
             '$greeting,',
             style: TextStyle(
               fontSize: 14.sp,
-              color: Colors.white.withValues(alpha: 0.85),
-              fontWeight: FontWeight.w400,
+              color: AppColors.textPrimary.withValues(alpha: 0.8), // Dark slate instead of white
+              fontWeight: FontWeight.w500,
             ),
           ),
           SizedBox(height: 4.h),
           Text(
             userName,
             style: TextStyle(
-              fontSize: 22.sp,
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
+              fontSize: 24.sp, // Slightly larger
+              color: AppColors.textPrimary, // Dark slate
+              fontWeight: FontWeight.w800,
             ),
           ),
           SizedBox(height: 12.h),
@@ -52,15 +48,15 @@ class GreetingHeader extends StatelessWidget {
               Icon(
                 Icons.calendar_today_outlined,
                 size: 16.r,
-                color: Colors.white.withValues(alpha: 0.85),
+                color: AppColors.textPrimary.withValues(alpha: 0.7),
               ),
               SizedBox(width: 6.w),
               Text(
                 today,
                 style: TextStyle(
                   fontSize: 13.sp,
-                  color: Colors.white.withValues(alpha: 0.85),
-                  fontWeight: FontWeight.w400,
+                  color: AppColors.textPrimary.withValues(alpha: 0.7),
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],

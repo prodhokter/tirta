@@ -35,28 +35,28 @@ class BottomNavbar extends StatelessWidget {
       },
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined, size: 22.r),
-          activeIcon: Icon(Icons.home, size: 22.r),
+          icon: Icon(Icons.home_outlined, size: 24.r),
+          activeIcon: Icon(Icons.home_rounded, size: 24.r),
           label: 'Beranda',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.medical_services_outlined, size: 22.r),
-          activeIcon: Icon(Icons.medical_services, size: 22.r),
+          icon: Icon(Icons.medical_services_outlined, size: 24.r),
+          activeIcon: Icon(Icons.medical_services_rounded, size: 24.r),
           label: 'Periksa',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.chat_outlined, size: 22.r),
-          activeIcon: Icon(Icons.chat, size: 22.r),
+          icon: Icon(Icons.chat_bubble_outline, size: 24.r),
+          activeIcon: Icon(Icons.chat_bubble_rounded, size: 24.r),
           label: 'Chatbot',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.menu_book_outlined, size: 22.r),
-          activeIcon: Icon(Icons.menu_book, size: 22.r),
+          icon: Icon(Icons.menu_book_rounded, size: 24.r),
+          activeIcon: Icon(Icons.menu_book_rounded, size: 24.r),
           label: 'Edukasi',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.history_outlined, size: 22.r),
-          activeIcon: Icon(Icons.history, size: 22.r),
+          icon: Icon(Icons.history_outlined, size: 24.r),
+          activeIcon: Icon(Icons.history_rounded, size: 24.r),
           label: 'Riwayat',
         ),
       ],

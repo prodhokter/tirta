@@ -29,7 +29,7 @@ class TirtaButton extends StatelessWidget {
             height: 20.h,
             width: 20.h,
             child: const CircularProgressIndicator(
-              color: Colors.white,
+              color: AppColors.textPrimary, // Dark spinner
               strokeWidth: 2,
             ),
           )
@@ -41,24 +41,25 @@ class TirtaButton extends StatelessWidget {
             ),
           );
 
-    final style = isOutlined
-        ? OutlinedButton.styleFrom(
-            foregroundColor: color ?? AppColors.primary,
-            side: BorderSide(color: color ?? AppColors.primary),
-            minimumSize: Size(width ?? double.infinity, height ?? 48.h),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-          )
-        : ElevatedButton.styleFrom(
-            backgroundColor: color ?? AppColors.primary,
-            foregroundColor: Colors.white,
-            disabledBackgroundColor: AppColors.textHint,
-            minimumSize: Size(width ?? double.infinity, height ?? 48.h),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-          );
+      final style = isOutlined
+          ? OutlinedButton.styleFrom(
+              foregroundColor: color ?? AppColors.primaryDark, // Darker color for outline
+              side: BorderSide(color: color ?? AppColors.primary),
+              minimumSize: Size(width ?? double.infinity, height ?? 52.h), // Slightly taller
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(28.r), // Very rounded
+              ),
+            )
+          : ElevatedButton.styleFrom(
+              backgroundColor: color ?? AppColors.primary,
+              foregroundColor: AppColors.textPrimary, // Dark slate on pastel
+              disabledBackgroundColor: AppColors.textHint,
+              elevation: 0, // Flat style
+              minimumSize: Size(width ?? double.infinity, height ?? 52.h), // Slightly taller
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(28.r), // Very rounded
+              ),
+            );
 
     if (isOutlined) {
       return OutlinedButton(

@@ -18,13 +18,13 @@ class AppTheme {
         scaffoldBackgroundColor: AppColors.bgLight,
         appBarTheme: AppBarTheme(
           backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.textPrimary, // Dark slate
           elevation: 0,
           centerTitle: true,
           titleTextStyle: GoogleFonts.poppins(
             fontSize: 18.sp,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary, // Dark slate
           ),
         ),
         textTheme: GoogleFonts.poppinsTextTheme().copyWith(
@@ -68,36 +68,37 @@ class AppTheme {
         ),
         cardTheme: CardThemeData(
           color: AppColors.cardBg,
-          elevation: 2,
+          elevation: 0, // Flat cards
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(24.r), // Very rounded
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            minimumSize: Size(double.infinity, 48.h),
+            foregroundColor: AppColors.textPrimary, // Dark text
+            minimumSize: Size(double.infinity, 52.h),
+            elevation: 0,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(28.r), // Very rounded
             ),
             textStyle: GoogleFonts.poppins(
               fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.primary,
-            minimumSize: Size(double.infinity, 48.h),
+            foregroundColor: AppColors.primaryDark,
+            minimumSize: Size(double.infinity, 52.h),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(28.r),
             ),
             side: const BorderSide(color: AppColors.primary),
             textStyle: GoogleFonts.poppins(
               fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -105,19 +106,19 @@ class AppTheme {
           filled: true,
           fillColor: Colors.white,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(20.r),
             borderSide: const BorderSide(color: AppColors.divider),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(20.r),
             borderSide: const BorderSide(color: AppColors.divider),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(20.r),
             borderSide: const BorderSide(color: AppColors.primary, width: 2),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(20.r),
             borderSide: const BorderSide(color: AppColors.error),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
@@ -128,11 +129,12 @@ class AppTheme {
           ),
         ),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          selectedItemColor: AppColors.primary,
-          unselectedItemColor: AppColors.textSecondary,
+          selectedItemColor: AppColors.primaryDark, // Use dark primary for contrast
+          unselectedItemColor: AppColors.textHint,
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.white,
-          elevation: 8,
+          elevation: 0, // Flat bottom nav
+
           selectedLabelStyle: GoogleFonts.poppins(
             fontSize: 12.sp,
             fontWeight: FontWeight.w600,

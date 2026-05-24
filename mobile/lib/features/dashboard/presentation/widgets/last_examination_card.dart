@@ -30,16 +30,15 @@ class LastExaminationCard extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(16.r),
+        padding: EdgeInsets.all(20.r),
         decoration: BoxDecoration(
           color: AppColors.cardBg,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: AppColors.divider),
+          borderRadius: BorderRadius.circular(24.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8.r,
-              offset: Offset(0, 2.h),
+              color: Colors.black.withValues(alpha: 0.02), // Very soft shadow
+              blurRadius: 10.r,
+              offset: Offset(0, 4.h),
             ),
           ],
         ),
@@ -135,11 +134,17 @@ class LastExaminationCard extends StatelessWidget {
   Widget _buildEmptyCard(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         color: AppColors.cardBg,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.divider),
+        borderRadius: BorderRadius.circular(24.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 10.r,
+            offset: Offset(0, 4.h),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
