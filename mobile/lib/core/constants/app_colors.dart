@@ -12,6 +12,13 @@ class AppColors {
   static const Color riskMedium = Color(0xFFF57C00);
   static const Color riskHigh = Color(0xFFB71C1C);
 
+  // 5-level risk colors
+  static const Color riskVeryLow = Color(0xFF2E7D32);     // Hijau
+  static const Color riskLowYellow = Color(0xFFE6A817);    // Kuning
+  static const Color riskMediumOrange = Color(0xFFF57C00); // Oranye
+  static const Color riskHighRed = Color(0xFFD32F2F);      // Merah
+  static const Color riskVeryHigh = Color(0xFF8B0000);     // Merah Tua
+
   static const Color bgLight = Color(0xFFF5F7FA);
   static const Color cardBg = Color(0xFFFFFFFF);
   static const Color textPrimary = Color(0xFF212121);
@@ -24,12 +31,16 @@ class AppColors {
 
   static Color getRiskColor(String level) {
     switch (level) {
+      case 'sangat_rendah':
+        return riskVeryLow;
       case 'rendah':
-        return riskLow;
+        return riskLowYellow;
       case 'sedang':
-        return riskMedium;
+        return riskMediumOrange;
       case 'tinggi':
-        return riskHigh;
+        return riskHighRed;
+      case 'sangat_tinggi':
+        return riskVeryHigh;
       default:
         return textSecondary;
     }

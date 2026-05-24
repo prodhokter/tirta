@@ -29,6 +29,13 @@ class QuestionScreen extends ConsumerWidget {
       });
     }
 
+    // Get current answer status using question code
+    bool? currentAnswer;
+    if (state.questions.isNotEmpty && currentIndex < totalQuestions) {
+      final currentCode = state.questions[currentIndex].code;
+      currentAnswer = state.answers[currentCode];
+    }
+
     return Scaffold(
       backgroundColor: AppColors.bgLight,
       appBar: AppBar(
@@ -59,15 +66,17 @@ class QuestionScreen extends ConsumerWidget {
               // Question card
               if (state.questions.isNotEmpty && currentIndex < totalQuestions)
                 Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      QuestionCard(
-                        question: state.questions[currentIndex],
-                        questionNumber: currentIndex + 1,
-                        totalQuestions: totalQuestions,
-                      ),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        QuestionCard(
+                          question: state.questions[currentIndex],
+                          questionNumber: currentIndex + 1,
+                          totalQuestions: totalQuestions,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               SizedBox(height: 32.h),
@@ -79,8 +88,7 @@ class QuestionScreen extends ConsumerWidget {
                       child: AnswerButton(
                         text: AppStrings.yes,
                         isYes: true,
-                        isSelected: currentIndex < state.answers.length &&
-                            state.answers[currentIndex] == true,
+                        isSelected: currentAnswer == true,
                         onPressed: () => notifier.answerQuestion(true),
                       ),
                     ),
@@ -89,8 +97,7 @@ class QuestionScreen extends ConsumerWidget {
                       child: AnswerButton(
                         text: AppStrings.no,
                         isYes: false,
-                        isSelected: currentIndex < state.answers.length &&
-                            state.answers[currentIndex] == false,
+                        isSelected: currentAnswer == false,
                         onPressed: () => notifier.answerQuestion(false),
                       ),
                     ),

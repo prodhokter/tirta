@@ -9,7 +9,7 @@ import 'package:tirta/features/expert_system/domain/usecases/save_examination_us
 
 class ExpertSystemState {
   final int currentQuestionIndex;
-  final List<bool> answers;
+  final Map<String, bool> answers;
   final bool isLoading;
   final String? error;
   final ExaminationResult? result;
@@ -17,7 +17,7 @@ class ExpertSystemState {
 
   const ExpertSystemState({
     this.currentQuestionIndex = 0,
-    this.answers = const [],
+    this.answers = const {},
     this.isLoading = false,
     this.error,
     this.result,
@@ -26,7 +26,7 @@ class ExpertSystemState {
 
   ExpertSystemState copyWith({
     int? currentQuestionIndex,
-    List<bool>? answers,
+    Map<String, bool>? answers,
     bool? isLoading,
     String? error,
     ExaminationResult? result,
@@ -72,7 +72,7 @@ class ExpertSystemNotifier extends StateNotifier<ExpertSystemState> {
   void startExamination() {
     state = const ExpertSystemState(
       currentQuestionIndex: 0,
-      answers: [],
+      answers: {},
       isLoading: false,
       error: null,
       result: null,
@@ -82,13 +82,9 @@ class ExpertSystemNotifier extends StateNotifier<ExpertSystemState> {
   }
 
   void answerQuestion(bool answer) {
-    final List<bool> updatedAnswers = List.from(state.answers);
-
-    if (state.currentQuestionIndex < updatedAnswers.length) {
-      updatedAnswers[state.currentQuestionIndex] = answer;
-    } else {
-      updatedAnswers.add(answer);
-    }
+    final currentQuestion = state.questions[state.currentQuestionIndex];
+    final Map<String, bool> updatedAnswers = Map.from(state.answers);
+    updatedAnswers[currentQuestion.code] = answer;
 
     if (!state.isLastQuestion) {
       state = state.copyWith(

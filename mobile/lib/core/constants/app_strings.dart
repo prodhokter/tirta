@@ -39,9 +39,11 @@ class AppStrings {
   static const String yes = 'Ya';
   static const String no = 'Tidak';
 
+  static const String riskVeryLow = 'Risiko Sangat Rendah';
   static const String riskLow = 'Risiko Rendah';
   static const String riskMedium = 'Risiko Sedang';
   static const String riskHigh = 'Risiko Tinggi';
+  static const String riskVeryHigh = 'Risiko Sangat Tinggi';
 
   static const String detectedSymptoms = 'Gejala Terdeteksi';
   static const String recommendation = 'Rekomendasi';
@@ -49,8 +51,10 @@ class AppStrings {
   static const String examinationHistory = 'Riwayat Pemeriksaan';
 
   static const String medicalDisclaimer =
-      'TIRTA adalah alat bantu skrining awal dan BUKAN pengganti diagnosis medis. '
-      'Hasil ini bersifat indikatif. Konsultasikan dengan tenaga kesehatan.';
+      'Aplikasi ini adalah alat bantu skrining awal, bukan alat diagnosis medis. '
+      'Hasil yang ditampilkan hanya bersifat indikatif berdasarkan gejala yang dilaporkan '
+      'secara mandiri oleh pengguna. Selalu konsultasikan hasil ini kepada dokter atau '
+      'puskesmas terdekat.';
 
   static const String chatPlaceholder = 'Ketik pertanyaan tentang TBC...';
   static const String chatSend = 'Kirim';

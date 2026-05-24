@@ -38,7 +38,7 @@ class QuestionCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
+              color: _getCategoryColor(question.category).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
@@ -46,14 +46,14 @@ class QuestionCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w600,
-                color: AppColors.primary,
+                color: _getCategoryColor(question.category),
               ),
             ),
           ),
           SizedBox(height: 20.h),
-          // Question number
+          // Question number & code
           Text(
-            'Pertanyaan $questionNumber',
+            'Pertanyaan $questionNumber (${question.code})',
             style: TextStyle(
               fontSize: 13.sp,
               color: AppColors.textSecondary,
@@ -66,12 +66,49 @@ class QuestionCard extends StatelessWidget {
             question.text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: 17.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,
               height: 1.4,
             ),
           ),
+          // Hint text
+          if (question.hint.isNotEmpty) ...[
+            SizedBox(height: 16.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(12.r),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.04),
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                ),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.info_outline_rounded,
+                    size: 16.sp,
+                    color: AppColors.primary.withValues(alpha: 0.6),
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      question.hint,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.textSecondary,
+                        height: 1.4,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -79,16 +116,31 @@ class QuestionCard extends StatelessWidget {
 
   String _getCategoryLabel(String category) {
     switch (category) {
-      case 'pernapasan':
-        return 'Gejala Pernapasan';
-      case 'sistemik':
-        return 'Gejala Sistemik';
+      case 'utama':
+        return 'Gejala Utama';
+      case 'pendukung':
+        return 'Gejala Pendukung';
       case 'risiko':
         return 'Faktor Risiko';
-      case 'riwayat':
-        return 'Riwayat';
+      case 'tambahan':
+        return 'Gejala Tambahan';
       default:
         return category;
+    }
+  }
+
+  Color _getCategoryColor(String category) {
+    switch (category) {
+      case 'utama':
+        return AppColors.error;
+      case 'pendukung':
+        return AppColors.warning;
+      case 'risiko':
+        return AppColors.primary;
+      case 'tambahan':
+        return AppColors.textSecondary;
+      default:
+        return AppColors.primary;
     }
   }
 }

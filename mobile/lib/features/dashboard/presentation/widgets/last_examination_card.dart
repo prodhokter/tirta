@@ -179,12 +179,16 @@ class LastExaminationCard extends StatelessWidget {
 
   String _getRiskLabel(String riskLevel) {
     switch (riskLevel) {
+      case 'sangat_rendah':
+        return AppStrings.riskVeryLow;
       case 'rendah':
         return AppStrings.riskLow;
       case 'sedang':
         return AppStrings.riskMedium;
       case 'tinggi':
         return AppStrings.riskHigh;
+      case 'sangat_tinggi':
+        return AppStrings.riskVeryHigh;
       default:
         return riskLevel;
     }

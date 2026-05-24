@@ -121,16 +121,54 @@ class ResultScreen extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    // Score info
+                    // Score info — weighted score
                     Text(
-                      '${result.score} dari 15 gejala terdeteksi',
+                      'Skor: ${result.score} dari $_totalMaxWeight',
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: AppColors.textSecondary,
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    // Conclusion card
+                    // Urgency warning banner
+                    if (result.isUrgent) ...[
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(14.r),
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: AppColors.error.withValues(alpha: 0.3),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.warning_amber_rounded,
+                              color: AppColors.error,
+                              size: 22.sp,
+                            ),
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              child: Text(
+                                'Batuk berdarah terdeteksi! Segera kunjungi IGD atau fasilitas kesehatan terdekat.',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.error,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                    ],
+                    // Recommendation card
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.all(16.r),
@@ -164,7 +202,7 @@ class ResultScreen extends ConsumerWidget {
                           ),
                           SizedBox(height: 8.h),
                           Text(
-                            result.conclusion,
+                            result.recommendation,
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: AppColors.textPrimary,
@@ -230,14 +268,20 @@ class ResultScreen extends ConsumerWidget {
     );
   }
 
+  static const int _totalMaxWeight = 110;
+
   String _getRiskLabel(String riskLevel) {
     switch (riskLevel) {
+      case 'sangat_rendah':
+        return AppStrings.riskVeryLow;
       case 'rendah':
         return AppStrings.riskLow;
       case 'sedang':
         return AppStrings.riskMedium;
       case 'tinggi':
         return AppStrings.riskHigh;
+      case 'sangat_tinggi':
+        return AppStrings.riskVeryHigh;
       default:
         return AppStrings.riskLow;
     }

@@ -74,7 +74,7 @@ class ExpertSystemIntroScreen extends ConsumerWidget {
                         icon: Icons.assignment_outlined,
                         title: '15 Pertanyaan',
                         description:
-                            'Pertanyaan terkait gejala pernapasan, gejala sistemik, faktor risiko, dan riwayat kesehatan',
+                            'Pertanyaan terkait gejala utama, gejala pendukung, faktor risiko, dan gejala tambahan TBC',
                       ),
                       SizedBox(height: 12.h),
                       _buildInfoCard(
