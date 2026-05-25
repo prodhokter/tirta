@@ -48,14 +48,20 @@ class CategoryChip extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null && icon!.isNotEmpty) ...[
-              Icon(
-                IconData(
-                  int.parse(icon!),
-                  fontFamily: 'MaterialIcons',
+              if (int.tryParse(icon!) != null)
+                Icon(
+                  IconData(
+                    int.parse(icon!),
+                    fontFamily: 'MaterialIcons',
+                  ),
+                  size: 16.r,
+                  color: isSelected ? Colors.white : chipColor,
+                )
+              else
+                Text(
+                  icon!,
+                  style: TextStyle(fontSize: 16.sp),
                 ),
-                size: 16.r,
-                color: isSelected ? Colors.white : chipColor,
-              ),
               SizedBox(width: 4.w),
             ],
             Text(

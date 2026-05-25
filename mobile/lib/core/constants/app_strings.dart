@@ -10,7 +10,7 @@ class AppStrings {
   static const String logout = 'Keluar';
   static const String email = 'Email';
   static const String password = 'Kata Sandi';
-  static const String fullName = 'Nama Lengkap';
+  static const String fullName = 'Username';
   static const String confirmPassword = 'Konfirmasi Kata Sandi';
   static const String forgotPassword = 'Lupa Kata Sandi?';
   static const String resetPassword = 'Reset Kata Sandi';

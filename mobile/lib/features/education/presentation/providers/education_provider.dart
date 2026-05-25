@@ -67,6 +67,7 @@ class EducationState {
     bool? isLoading,
     String? error,
     String? selectedCategory,
+    bool clearCategory = false,
     String? searchQuery,
   }) {
     return EducationState(
@@ -75,7 +76,7 @@ class EducationState {
       featuredArticles: featuredArticles ?? this.featuredArticles,
       isLoading: isLoading ?? this.isLoading,
       error: error,
-      selectedCategory: selectedCategory ?? this.selectedCategory,
+      selectedCategory: clearCategory ? null : (selectedCategory ?? this.selectedCategory),
       searchQuery: searchQuery ?? this.searchQuery,
     );
   }
@@ -136,7 +137,12 @@ class EducationNotifier extends StateNotifier<EducationState> {
   }
 
   Future<void> selectCategory(String? slug) async {
-    state = state.copyWith(selectedCategory: slug, isLoading: true, error: null);
+    state = state.copyWith(
+      selectedCategory: slug,
+      clearCategory: slug == null,
+      isLoading: true,
+      error: null,
+    );
     try {
       final articles = await _getArticlesUseCase(categorySlug: slug);
       state = state.copyWith(articles: articles, isLoading: false);

@@ -52,7 +52,7 @@ class FeatureShortcutGrid extends StatelessWidget {
         crossAxisCount: 2,
         crossAxisSpacing: 12.w,
         mainAxisSpacing: 12.h,
-        childAspectRatio: 1.5,
+        childAspectRatio: 1.15,
       ),
       itemCount: shortcuts.length,
       itemBuilder: (context, index) {
@@ -73,39 +73,44 @@ class _ShortcutCard extends StatelessWidget {
     return GestureDetector(
       onTap: item.onTap,
       child: Container(
-        padding: EdgeInsets.all(16.r),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         decoration: BoxDecoration(
           color: item.backgroundColor, // Use solid pastel background
           borderRadius: BorderRadius.circular(24.r), // Very soft rounded corners
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              item.icon,
-              size: 26.r,
-              color: item.color,
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              item.label,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w700,
-                color: item.color, // Matching dark text
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                item.icon,
+                size: 26.r,
+                color: item.color,
               ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              item.description,
-              style: TextStyle(
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w500,
-                color: item.color.withValues(alpha: 0.6), // Dimmer dark text
+              SizedBox(height: 8.h),
+              Text(
+                item.label,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w700,
+                  color: item.color,
+                ),
               ),
-            ),
-          ],
+              SizedBox(height: 4.h),
+              Text(
+                item.description,
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w500,
+                  color: item.color.withValues(alpha: 0.6),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

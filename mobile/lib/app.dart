@@ -16,6 +16,7 @@ import 'package:tirta/features/expert_system/presentation/screens/question_scree
 import 'package:tirta/features/expert_system/presentation/screens/result_screen.dart';
 import 'package:tirta/features/history/presentation/screens/history_screen.dart';
 import 'package:tirta/features/history/presentation/screens/history_detail_screen.dart';
+import 'package:tirta/shared/services/supabase_service.dart';
 import 'package:tirta/shared/widgets/bottom_navbar.dart';
 
 export 'package:tirta/core/theme/app_theme.dart';
@@ -28,8 +29,19 @@ class AppRouter {
 
   static GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: AppRoutes.dashboard,
+    initialLocation: AppRoutes.splash,
     redirect: (context, state) {
+      final isLoggedIn = SupabaseService.currentSession != null;
+      final isGoingToLogin = state.matchedLocation == AppRoutes.login;
+      final isGoingToRegister = state.matchedLocation == AppRoutes.register;
+      final isGoingToSplash = state.matchedLocation == AppRoutes.splash;
+      
+      if (!isLoggedIn && !isGoingToLogin && !isGoingToRegister && !isGoingToSplash) {
+        return AppRoutes.login;
+      }
+      if (isLoggedIn && (isGoingToLogin || isGoingToRegister)) {
+        return AppRoutes.dashboard;
+      }
       return null;
     },
     routes: [
