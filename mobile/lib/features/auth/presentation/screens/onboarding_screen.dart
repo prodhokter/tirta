@@ -16,23 +16,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentPage = 0;
 
   final _pages = [
-    _OnboardingPage(
+    const _OnboardingPage(
       icon: Icons.health_and_safety,
       color: AppColors.primary,
       title: 'Deteksi Dini TBC',
       description:
           'Jawab 15 pertanyaan sederhana untuk mengetahui tingkat risiko TBC kamu dengan Sistem Pakar Forward Chaining.',
     ),
-    _OnboardingPage(
+    const _OnboardingPage(
       icon: Icons.smart_toy,
-      color: const Color(0xFF00838F),
+      color: Color(0xFF00838F),
       title: 'Chatbot AI TBC',
       description:
           'Tanyakan apa saja tentang TBC kepada asisten AI kami yang siap membantu menjawab pertanyaan kamu 24/7.',
     ),
-    _OnboardingPage(
+    const _OnboardingPage(
       icon: Icons.menu_book,
-      color: const Color(0xFF2E7D32),
+      color: Color(0xFF2E7D32),
       title: 'Edukasi Lengkap',
       description:
           'Akses artikel edukasi terstruktur tentang TBC — dari gejala, penularan, pencegahan, hingga pengobatan.',

@@ -60,17 +60,17 @@ class _FeaturedArticleCard extends StatelessWidget {
   const _FeaturedArticleCard({required this.index});
 
   static final List<_ArticleData> _articles = [
-    _ArticleData(
+    const _ArticleData(
       title: 'Mengenal TBC: Gejala, Penyebab, dan Cara Pencegahan',
       category: 'Pengantar',
       readTime: '5 menit baca',
       color: AppColors.primary,
     ),
-    _ArticleData(
+    const _ArticleData(
       title: 'Pentingnya Deteksi Dini TBC untuk Pengobatan Efektif',
       category: 'Edukasi',
       readTime: '4 menit baca',
-      color: const Color(0xFF009688),
+      color: Color(0xFF009688),
     ),
   ];
 

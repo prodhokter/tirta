@@ -29,7 +29,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(
+            child: const Text(
               AppStrings.cancel,
               style: TextStyle(color: AppColors.textSecondary),
             ),
@@ -39,7 +39,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               Navigator.pop(context);
               ref.read(authNotifierProvider.notifier).signOut();
             },
-            child: Text(
+            child: const Text(
               AppStrings.logout,
               style: TextStyle(
                 color: AppColors.error,

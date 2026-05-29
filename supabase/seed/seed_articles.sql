@@ -8,13 +8,13 @@
 -- ============================================================================
 
 INSERT INTO article_categories (name, slug, icon, color) VALUES
-  ('Pengenalan TBC', 'pengenalan', '🏥', '#1565C0'),
-  ('Gejala TBC', 'gejala', '🩺', '#E53935'),
-  ('Penularan TBC', 'penularan', '💨', '#F57C00'),
-  ('Pencegahan TBC', 'pencegahan', '🛡️', '#2E7D32'),
-  ('Pengobatan OAT', 'pengobatan', '💊', '#6A1B9A'),
-  ('Sosialisasi & Stigma', 'sosialisasi', '🤝', '#00838F')
-ON CONFLICT (slug) DO NOTHING;
+  ('Pengenalan TBC', 'pengenalan', '61838', '#1565C0'),
+  ('Gejala TBC', 'gejala', '61894', '#E53935'),
+  ('Penularan TBC', 'penularan', '61726', '#F57C00'),
+  ('Pencegahan TBC', 'pencegahan', '62330', '#2E7D32'),
+  ('Pengobatan OAT', 'pengobatan', '61912', '#6A1B9A'),
+  ('Sosialisasi & Stigma', 'sosialisasi', '61197', '#00838F')
+ON CONFLICT (slug) DO UPDATE SET icon = EXCLUDED.icon;
 
 -- ============================================================================
 -- 2. Articles (12 articles)

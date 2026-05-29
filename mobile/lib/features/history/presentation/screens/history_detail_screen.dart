@@ -417,7 +417,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.cardBg,
         border: Border(top: BorderSide(color: AppColors.divider)),
       ),

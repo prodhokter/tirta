@@ -40,7 +40,7 @@ final historyRepositoryProvider = Provider<HistoryRepositoryImpl>((ref) {
 });
 
 final historyNotifierProvider =
-    StateNotifierProvider<HistoryNotifier, HistoryState>(
+    StateNotifierProvider.autoDispose<HistoryNotifier, HistoryState>(
   (ref) {
     final repository = ref.watch(historyRepositoryProvider);
     return HistoryNotifier(repository);

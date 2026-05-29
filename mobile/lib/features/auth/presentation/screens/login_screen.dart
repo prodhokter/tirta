@@ -200,7 +200,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   // Divider
                   Row(
                     children: [
-                      Expanded(
+                      const Expanded(
                           child: Divider(color: AppColors.divider)),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -212,7 +212,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                         ),
                       ),
-                      Expanded(
+                      const Expanded(
                           child: Divider(color: AppColors.divider)),
                     ],
                   ),

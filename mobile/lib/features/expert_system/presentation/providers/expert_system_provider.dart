@@ -119,9 +119,12 @@ class ExpertSystemNotifier extends StateNotifier<ExpertSystemState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
+      print("Mencoba menyimpan riwayat ke Supabase...");
       await _saveExaminationUsecase(state.result!);
+      print("Berhasil menyimpan riwayat ke Supabase!");
       state = state.copyWith(isLoading: false);
     } catch (e) {
+      print("ERROR SIMPAN RIWAYAT: $e");
       state = state.copyWith(
         isLoading: false,
         error: e.toString(),

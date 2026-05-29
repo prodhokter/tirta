@@ -12,7 +12,7 @@ import 'package:tirta/features/expert_system/data/datasources/examination_remote
 import 'package:tirta/features/expert_system/data/models/examination_model.dart';
 import 'package:tirta/shared/widgets/tirta_button.dart';
 
-final _lastExaminationProvider = FutureProvider<ExaminationModel?>((ref) async {
+final _lastExaminationProvider = FutureProvider.autoDispose<ExaminationModel?>((ref) async {
   final datasource = ExaminationRemoteDatasource();
   final history = await datasource.getExaminationHistory();
   return history.isNotEmpty ? history.first : null;

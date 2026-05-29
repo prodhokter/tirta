@@ -122,7 +122,7 @@ class HistoryScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(
+            child: const Text(
               AppStrings.cancel,
               style: TextStyle(color: AppColors.textSecondary),
             ),
@@ -136,9 +136,9 @@ class HistoryScreen extends ConsumerWidget {
                     .deleteExamination(exam.id!);
               }
             },
-            child: Text(
+            child: const Text(
               AppStrings.delete,
-              style: const TextStyle(color: AppColors.error),
+              style: TextStyle(color: AppColors.error),
             ),
           ),
         ],

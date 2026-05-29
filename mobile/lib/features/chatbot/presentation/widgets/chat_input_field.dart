@@ -83,7 +83,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24.r),
-                    borderSide: BorderSide(
+                    borderSide: const BorderSide(
                       color: AppColors.primaryLight,
                       width: 1.5,
                     ),

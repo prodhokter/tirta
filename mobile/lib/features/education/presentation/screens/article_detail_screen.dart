@@ -103,7 +103,7 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
   Widget _buildLoading() {
     return SizedBox(
       height: 400.h,
-      child: Center(
+      child: const Center(
         child: CircularProgressIndicator(color: AppColors.primary),
       ),
     );
@@ -233,7 +233,7 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
               SizedBox(height: 20.h),
 
               // Divider
-              Divider(color: AppColors.divider, thickness: 1),
+              const Divider(color: AppColors.divider, thickness: 1),
               SizedBox(height: 20.h),
 
               // Content

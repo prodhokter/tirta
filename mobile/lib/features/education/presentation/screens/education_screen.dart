@@ -138,7 +138,7 @@ class _EducationScreenState extends ConsumerState<EducationScreen> {
                   : state.error != null
                       ? _buildError(state.error!)
                       : state.articles.isEmpty
-                          ? EmptyStateWidget(
+                          ? const EmptyStateWidget(
                               message: AppStrings.emptyArticles,
                               icon: Icons.article_outlined,
                             )
@@ -169,7 +169,7 @@ class _EducationScreenState extends ConsumerState<EducationScreen> {
                                       ),
                                     ),
                                     SizedBox(height: 8.h),
-                                    Divider(color: AppColors.divider),
+                                    const Divider(color: AppColors.divider),
                                     SizedBox(height: 12.h),
                                   ],
 
