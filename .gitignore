@@ -3,6 +3,7 @@
 # ============================================
 .vscode/
 .claude/
+env.md
 # --- Flutter / Dart ---
 mobile/.dart_tool/
 mobile/.packages
