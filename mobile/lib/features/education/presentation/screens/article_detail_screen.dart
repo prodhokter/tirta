@@ -5,8 +5,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:tirta/core/constants/app_colors.dart';
 import 'package:tirta/core/constants/app_strings.dart';
+import 'package:tirta/core/theme/text_styles.dart';
 import 'package:tirta/features/education/domain/entities/article.dart';
 import 'package:tirta/features/education/presentation/providers/education_provider.dart';
+import 'package:tirta/shared/widgets/markdown_renderer.dart';
 
 class ArticleDetailScreen extends ConsumerStatefulWidget {
   final String articleId;
@@ -64,28 +66,45 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
     return DateFormat('d MMMM yyyy', 'id_ID').format(date);
   }
 
+  Color _parseCategoryColor(String? hexColor) {
+    if (hexColor == null || hexColor.isEmpty) return AppColors.primary;
+    try {
+      final hex = hexColor.replaceFirst('#', '');
+      return Color(int.parse('FF$hex', radix: 16));
+    } catch (_) {
+      return AppColors.primary;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.cardBg,
       body: CustomScrollView(
         slivers: [
-          // Sliver AppBar
           SliverAppBar(
             leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios_new,
-                size: 22.r,
-                color: AppColors.textPrimary,
+              icon: Container(
+                width: 36.r,
+                height: 36.r,
+                decoration: BoxDecoration(
+                  color: AppColors.cardBg.withValues(alpha: 0.9),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 18.sp,
+                  color: AppColors.textPrimary,
+                ),
               ),
               onPressed: () => Navigator.of(context).pop(),
             ),
             backgroundColor: AppColors.cardBg,
+            surfaceTintColor: Colors.transparent,
             elevation: 0,
             pinned: true,
           ),
 
-          // Content
           SliverToBoxAdapter(
             child: _isLoading
                 ? _buildLoading()
@@ -124,8 +143,7 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
             SizedBox(height: 16.h),
             Text(
               AppStrings.errorGeneric,
-              style: TextStyle(
-                fontSize: 14.sp,
+              style: TextStyles.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
               textAlign: TextAlign.center,
@@ -136,8 +154,11 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
               ),
-              child: const Text('Coba Lagi'),
+              child: Text(AppStrings.retry),
             ),
           ],
         ),
@@ -146,6 +167,8 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
   }
 
   Widget _buildContent(Article article) {
+    final categoryColor = _parseCategoryColor(article.category?.color);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -171,6 +194,18 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
                 size: 48.r,
               ),
             ),
+          )
+        else
+          Container(
+            width: double.infinity,
+            height: 120.h,
+            color: categoryColor.withValues(alpha: 0.1),
+            alignment: Alignment.center,
+            child: Icon(
+              Icons.article_outlined,
+              size: 40.r,
+              color: categoryColor.withValues(alpha: 0.4),
+            ),
           ),
 
         Padding(
@@ -186,7 +221,7 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
                     vertical: 5.h,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
+                    color: categoryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: Text(
@@ -194,26 +229,23 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                      color: categoryColor,
                     ),
                   ),
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: 14.h),
               ],
 
               // Title
               Text(
                 article.title,
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                style: TextStyles.headlineMedium.copyWith(
                   height: 1.3,
                 ),
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: 14.h),
 
-              // Meta row: author, read time, date
+              // Meta row
               Wrap(
                 spacing: 16.w,
                 runSpacing: 8.h,
@@ -230,14 +262,21 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
                     ),
                 ],
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 24.h),
 
               // Divider
-              const Divider(color: AppColors.divider, thickness: 1),
-              SizedBox(height: 20.h),
+              Container(
+                height: 1,
+                color: AppColors.divider,
+              ),
+              SizedBox(height: 24.h),
 
-              // Content
-              _buildRichContent(article.content),
+              // Content — uses shared MarkdownRenderer
+              MarkdownRenderer(
+                text: article.content,
+                baseFontSize: 14,
+                lineHeight: 1.7,
+              ),
               SizedBox(height: 40.h),
             ],
           ),
@@ -254,119 +293,11 @@ class _ArticleDetailScreenState extends ConsumerState<ArticleDetailScreen> {
         SizedBox(width: 4.w),
         Text(
           text,
-          style: TextStyle(
+          style: TextStyles.caption.copyWith(
             fontSize: 12.sp,
-            color: AppColors.textSecondary,
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildRichContent(String content) {
-    final paragraphs = content.split('\n\n');
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: paragraphs.map((paragraph) {
-        final trimmed = paragraph.trim();
-        if (trimmed.isEmpty) return const SizedBox.shrink();
-
-        // Check for markdown-like heading (lines starting with #)
-        if (trimmed.startsWith('### ')) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: 8.h, top: 16.h),
-            child: Text(
-              trimmed.substring(4),
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          );
-        } else if (trimmed.startsWith('## ')) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: 10.h, top: 20.h),
-            child: Text(
-              trimmed.substring(3),
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          );
-        } else if (trimmed.startsWith('# ')) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: 12.h, top: 24.h),
-            child: Text(
-              trimmed.substring(2),
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          );
-        }
-
-        // Check for bullet points (lines starting with - or *)
-        final lines = trimmed.split('\n');
-        if (lines.every(
-          (line) => line.trim().startsWith('- ') || line.trim().startsWith('* '),
-        )) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: 12.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: lines.map((line) {
-                final bulletText = line.trim().substring(2);
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 4.h, left: 8.w),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '•',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(width: 8.w),
-                      Expanded(
-                        child: Text(
-                          bulletText,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: AppColors.textPrimary,
-                            height: 1.5,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
-          );
-        }
-
-        // Regular paragraph
-        return Padding(
-          padding: EdgeInsets.only(bottom: 12.h),
-          child: Text(
-            trimmed,
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.textPrimary,
-              height: 1.7,
-            ),
-            textAlign: TextAlign.justify,
-          ),
-        );
-      }).toList(),
     );
   }
 }

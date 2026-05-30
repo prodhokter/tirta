@@ -8,7 +8,6 @@ import 'package:tirta/core/constants/app_strings.dart';
 import 'package:tirta/core/utils/validators.dart';
 import 'package:tirta/features/auth/presentation/providers/auth_provider.dart';
 import 'package:tirta/features/auth/presentation/widgets/auth_text_field.dart';
-import 'package:tirta/features/auth/presentation/widgets/social_login_button.dart';
 import 'package:tirta/shared/widgets/tirta_button.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -38,10 +37,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             password: _passwordController.text,
           );
     }
-  }
-
-  void _handleGoogleLogin() {
-    ref.read(authNotifierProvider.notifier).signInWithGoogle();
   }
 
   @override
@@ -194,34 +189,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     text: AppStrings.login,
                     isLoading: authState.isLoading,
                     onPressed: _handleLogin,
-                  ),
-                  SizedBox(height: 24.h),
-
-                  // Divider
-                  Row(
-                    children: [
-                      const Expanded(
-                          child: Divider(color: AppColors.divider)),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: Text(
-                          'atau',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ),
-                      const Expanded(
-                          child: Divider(color: AppColors.divider)),
-                    ],
-                  ),
-                  SizedBox(height: 24.h),
-
-                  // Google login button
-                  SocialLoginButton(
-                    onPressed: _handleGoogleLogin,
-                    isLoading: authState.isLoading,
                   ),
                   SizedBox(height: 32.h),
 

@@ -56,6 +56,7 @@ class AppStrings {
       'secara mandiri oleh pengguna. Selalu konsultasikan hasil ini kepada dokter atau '
       'puskesmas terdekat.';
 
+  // Chatbot
   static const String chatPlaceholder = 'Ketik pertanyaan tentang TBC...';
   static const String chatSend = 'Kirim';
   static const String chatNewSession = 'Sesi Chat Baru';
@@ -63,21 +64,45 @@ class AppStrings {
       'Maaf, terjadi kesalahan. Silakan coba lagi.';
   static const String chatOffline =
       'Tidak ada koneksi internet. Cek jaringan kamu.';
+  static const String chatTyping = 'Mengetik...';
+  static const String chatWelcome =
+      'Halo! Saya TIRTA Assistant, asisten kesehatan virtual kamu. Saya siap membantu menjawab pertanyaan seputar TBC dan kesehatan paru-paru.';
+  static const String chatWelcomeSub =
+      'Silakan ketik pertanyaan atau pilih topik di bawah untuk memulai.';
+  static const String chatClearConfirm = 'Yakin ingin menghapus semua pesan?';
+  static const String chatClear = 'Hapus Chat';
+  static const String chatNewChat = 'Obrolan Baru';
+  static const String chatCopy = 'Salin';
+  static const String chatCopied = 'Tersalin';
+  static const String chatSessionDefault = 'Obrolan TBC';
+  static const String chatMessageCount = 'pesan';
+  static const String chatDisclaimer =
+      'TIRTA Assistant adalah asisten edukatif, bukan pengganti dokter. Selalu konsultasikan masalah kesehatan ke tenaga medis profesional.';
+  static const String chatOffTopic = 'Maaf, saya hanya bisa membantu pertanyaan seputar TBC dan kesehatan paru-paru. Silakan ajukan pertanyaan terkait topik tersebut.';
 
+  // Quick replies
   static const String quickReplyTBC = 'Apa itu TBC?';
   static const String quickReplySymptoms = 'Gejala TBC';
   static const String quickReplyTransmission = 'Cara penularan';
+  static const String quickReplyTreatment = 'Pengobatan TBC';
+  static const String quickReplyPrevention = 'Pencegahan TBC';
+  static const String quickReplyNutrition = 'Nutrisi TBC';
+  static const String quickReplyMDR = 'TBC MDR';
+  static const String quickReplyChildren = 'TBC pada anak';
 
+  // Education / Articles
   static const String searchArticles = 'Cari artikel...';
   static const String allCategories = 'Semua';
   static const String readTime = 'menit baca';
   static const String featuredArticles = 'Artikel Terbaru';
+  static const String viewAll = 'Lihat Semua';
 
   static const String loading = 'Memuat...';
   static const String errorGeneric = 'Terjadi kesalahan. Coba lagi.';
   static const String errorNetwork = 'Koneksi gagal. Cek internet kamu.';
   static const String emptyHistory = 'Belum ada riwayat pemeriksaan';
   static const String emptyArticles = 'Artikel tidak ditemukan';
+  static const String emptyArticlesSub = 'Belum ada artikel untuk kategori ini.';
 
   static const String greetingMorning = 'Selamat Pagi';
   static const String greetingAfternoon = 'Selamat Siang';
@@ -93,4 +118,5 @@ class AppStrings {
   static const String editProfile = 'Edit Profil';
   static const String save = 'Simpan';
   static const String saved = 'Tersimpan';
+  static const String retry = 'Coba Lagi';
 }

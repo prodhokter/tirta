@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tirta/core/constants/app_colors.dart';
 import 'package:tirta/core/constants/app_routes.dart';
 import 'package:tirta/core/constants/app_strings.dart';
+import 'package:tirta/features/education/data/datasources/article_remote_datasource.dart';
+import 'package:tirta/features/education/data/models/article_model.dart';
 
-class FeaturedArticlesSection extends StatelessWidget {
+final _featuredArticlesProvider = FutureProvider.autoDispose<List<ArticleModel>>((ref) async {
+  final datasource = ArticleRemoteDatasource();
+  return await datasource.getFeaturedArticles();
+});
+
+class FeaturedArticlesSection extends ConsumerWidget {
   const FeaturedArticlesSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final articlesAsync = ref.watch(_featuredArticlesProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -25,9 +36,9 @@ class FeaturedArticlesSection extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () => context.go(AppRoutes.education),
+              onTap: () => context.push(AppRoutes.education),
               child: Text(
-                'Lihat Semua',
+                AppStrings.viewAll,
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w500,
@@ -38,53 +49,76 @@ class FeaturedArticlesSection extends StatelessWidget {
           ],
         ),
         SizedBox(height: 12.h),
-        SizedBox(
-          height: 170.h,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: 2,
-            separatorBuilder: (_, __) => SizedBox(width: 12.w),
-            itemBuilder: (context, index) {
-              return _FeaturedArticleCard(index: index);
-            },
+
+        articlesAsync.when(
+          data: (articles) {
+            if (articles.isEmpty) return const SizedBox.shrink();
+
+            return SizedBox(
+              height: 185.h,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: articles.length,
+                separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                itemBuilder: (context, index) {
+                  final article = articles[index];
+                  return _FeaturedArticleCard(
+                    article: article,
+                    onTap: () => context.push(
+                      AppRoutes.articleDetail,
+                      extra: article.id,
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+          loading: () => SizedBox(
+            height: 185.h,
+            child: Row(
+              children: [
+                _buildShimmerCard(),
+                SizedBox(width: 12.w),
+                _buildShimmerCard(),
+              ],
+            ),
           ),
+          error: (_, __) => const SizedBox.shrink(),
         ),
       ],
+    );
+  }
+
+  Widget _buildShimmerCard() {
+    return Container(
+      width: 260.w,
+      decoration: BoxDecoration(
+        color: AppColors.bgLight,
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(color: AppColors.divider),
+      ),
     );
   }
 }
 
 class _FeaturedArticleCard extends StatelessWidget {
-  final int index;
+  final ArticleModel article;
+  final VoidCallback onTap;
 
-  const _FeaturedArticleCard({required this.index});
-
-  static final List<_ArticleData> _articles = [
-    const _ArticleData(
-      title: 'Mengenal TBC: Gejala, Penyebab, dan Cara Pencegahan',
-      category: 'Pengantar',
-      readTime: '5 menit baca',
-      color: AppColors.primary,
-    ),
-    const _ArticleData(
-      title: 'Pentingnya Deteksi Dini TBC untuk Pengobatan Efektif',
-      category: 'Edukasi',
-      readTime: '4 menit baca',
-      color: Color(0xFF009688),
-    ),
-  ];
+  const _FeaturedArticleCard({
+    required this.article,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final article = _articles[index];
+    final categoryColor = _parseColor(article.category?.color);
+    final hasImage = article.imageUrl != null && article.imageUrl!.isNotEmpty;
 
     return GestureDetector(
-      onTap: () {
-        context.push(AppRoutes.education);
-      },
+      onTap: onTap,
       child: Container(
         width: 260.w,
-        padding: EdgeInsets.all(14.r),
         decoration: BoxDecoration(
           color: AppColors.cardBg,
           borderRadius: BorderRadius.circular(14.r),
@@ -100,80 +134,101 @@ class _FeaturedArticleCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Placeholder image area
-            Container(
-              width: double.infinity,
-              height: 70.h,
-              decoration: BoxDecoration(
-                color: article.color.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              alignment: Alignment.center,
-              child: Icon(
-                Icons.article_outlined,
-                size: 30.r,
-                color: article.color,
-              ),
+            // Image
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(13.r)),
+              child: hasImage
+                  ? CachedNetworkImage(
+                      imageUrl: article.imageUrl!,
+                      width: double.infinity,
+                      height: 90.h,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => _buildImagePlaceholder(categoryColor),
+                      errorWidget: (_, __, ___) => _buildImagePlaceholder(categoryColor),
+                    )
+                  : _buildImagePlaceholder(categoryColor),
             ),
-            SizedBox(height: 10.h),
-            Text(
-              article.title,
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            SizedBox(height: 6.h),
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.w,
-                    vertical: 2.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: article.color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Text(
-                    article.category,
+
+            Padding(
+              padding: EdgeInsets.all(10.r),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    article.title,
                     style: TextStyle(
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w500,
-                      color: article.color,
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  article.readTime,
-                  style: TextStyle(
-                    fontSize: 10.sp,
-                    color: AppColors.textSecondary,
+                  SizedBox(height: 6.h),
+
+                  // Category + read time
+                  Row(
+                    children: [
+                      if (article.category != null)
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: categoryColor.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
+                          child: Text(
+                            article.category!.name,
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w500,
+                              color: categoryColor,
+                            ),
+                          ),
+                        ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        '${article.readTimeMinutes} ${AppStrings.readTime}',
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
   }
-}
 
-class _ArticleData {
-  final String title;
-  final String category;
-  final String readTime;
-  final Color color;
+  Widget _buildImagePlaceholder(Color color) {
+    return Container(
+      width: double.infinity,
+      height: 90.h,
+      color: color.withValues(alpha: 0.08),
+      alignment: Alignment.center,
+      child: Icon(
+        Icons.article_outlined,
+        size: 28.r,
+        color: color.withValues(alpha: 0.4),
+      ),
+    );
+  }
 
-  const _ArticleData({
-    required this.title,
-    required this.category,
-    required this.readTime,
-    required this.color,
-  });
+  Color _parseColor(String? hexColor) {
+    if (hexColor == null || hexColor.isEmpty) return AppColors.primary;
+    try {
+      final hex = hexColor.replaceFirst('#', '');
+      return Color(int.parse('FF$hex', radix: 16));
+    } catch (_) {
+      return AppColors.primary;
+    }
+  }
 }

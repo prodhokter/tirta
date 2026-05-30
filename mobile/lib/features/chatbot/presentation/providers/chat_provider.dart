@@ -5,7 +5,6 @@ import 'package:tirta/features/chatbot/data/datasources/chat_remote_datasource.d
 import 'package:tirta/features/chatbot/data/repositories/chat_repository_impl.dart';
 import 'package:tirta/features/chatbot/domain/entities/chat_message.dart';
 import 'package:tirta/features/chatbot/domain/usecases/get_chat_history_usecase.dart';
-import 'package:tirta/core/constants/app_strings.dart';
 
 class ChatState {
   final List<ChatMessage> messages;
@@ -13,6 +12,7 @@ class ChatState {
   final bool isStreaming;
   final String? error;
   final String? sessionId;
+  final String? sessionTitle;
 
   const ChatState({
     this.messages = const [],
@@ -20,6 +20,7 @@ class ChatState {
     this.isStreaming = false,
     this.error,
     this.sessionId,
+    this.sessionTitle,
   });
 
   ChatState copyWith({
@@ -28,6 +29,7 @@ class ChatState {
     bool? isStreaming,
     String? error,
     String? sessionId,
+    String? sessionTitle,
   }) {
     return ChatState(
       messages: messages ?? this.messages,
@@ -35,6 +37,7 @@ class ChatState {
       isStreaming: isStreaming ?? this.isStreaming,
       error: error,
       sessionId: sessionId ?? this.sessionId,
+      sessionTitle: sessionTitle ?? this.sessionTitle,
     );
   }
 }
@@ -93,7 +96,6 @@ class ChatNotifier extends StateNotifier<ChatState> {
         createdAt: DateTime.now(),
       );
 
-      // Add user message and show a placeholder for assistant
       final placeholderMessage = ChatMessage(
         sessionId: sessionId,
         role: 'assistant',
@@ -110,12 +112,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       await _saveMessageToSupabase(userMessage);
 
-      final contextMessages = [...state.messages.where((m) => m.content.isNotEmpty && m.role == 'user' || m.role == 'assistant')];
+      final contextMessages = buildContextMessages(state.messages);
 
-      // Use streaming
       final stream = _repository.sendMessageStream(
         sessionId: sessionId,
-        messages: contextMessages.where((m) => m.content.isNotEmpty).toList(),
+        messages: contextMessages,
       );
 
       final buffer = StringBuffer();
@@ -124,7 +125,6 @@ class ChatNotifier extends StateNotifier<ChatState> {
         (chunk) {
           buffer.write(chunk);
           final updatedMessages = List<ChatMessage>.from(state.messages);
-          // Update the last message (placeholder) with accumulated content
           if (updatedMessages.isNotEmpty && updatedMessages.last.role == 'assistant') {
             updatedMessages[updatedMessages.length - 1] = ChatMessage(
               sessionId: sessionId,
@@ -136,13 +136,18 @@ class ChatNotifier extends StateNotifier<ChatState> {
           state = state.copyWith(messages: updatedMessages);
         },
         onDone: () {
-          state = state.copyWith(isLoading: false, isStreaming: false);
+          final finalMessages = List<ChatMessage>.from(state.messages);
+          state = state.copyWith(
+            messages: finalMessages,
+            isLoading: false,
+            isStreaming: false,
+          );
         },
         onError: (e) {
           final errorMessage = ChatMessage(
             sessionId: state.sessionId,
             role: 'assistant',
-            content: AppStrings.chatError,
+            content: _formatError(e),
             createdAt: DateTime.now(),
           );
           final updatedMessages = List<ChatMessage>.from(state.messages);
@@ -164,7 +169,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
       final errorMessage = ChatMessage(
         sessionId: state.sessionId,
         role: 'assistant',
-        content: AppStrings.chatError,
+        content: _formatError(e),
         createdAt: DateTime.now(),
       );
 
@@ -175,6 +180,80 @@ class ChatNotifier extends StateNotifier<ChatState> {
         error: e.toString(),
       );
     }
+  }
+
+  /// Build conversation context: only send recent messages that are user/assistant
+  /// with content, keeping the AI's context window manageable.
+  List<ChatMessage> buildContextMessages(List<ChatMessage> allMessages) {
+    final contextMessages = allMessages
+        .where((m) => m.content.isNotEmpty && (m.role == 'user' || m.role == 'assistant'))
+        .toList();
+
+    // Keep last 30 messages (15 conversation turns) for context
+    // DeepSeek v4 has large context window but we keep it focused
+    if (contextMessages.length > 30) {
+      return contextMessages.sublist(contextMessages.length - 30);
+    }
+    return contextMessages;
+  }
+
+  Future<void> clearChat() async {
+    _streamSubscription?.cancel();
+
+    try {
+      final newSessionId = await _repository.createSession();
+      state = ChatState(sessionId: newSessionId);
+    } catch (_) {
+      state = const ChatState();
+    }
+  }
+
+  Future<void> retryLastMessage() async {
+    if (state.messages.isEmpty) return;
+
+    ChatMessage? lastUserMessage;
+    for (int i = state.messages.length - 1; i >= 0; i--) {
+      if (state.messages[i].role == 'user') {
+        lastUserMessage = state.messages[i];
+        break;
+      }
+    }
+
+    if (lastUserMessage == null) return;
+
+    final lastUserIndex = state.messages.indexOf(lastUserMessage);
+    final trimmedMessages = state.messages.sublist(0, lastUserIndex);
+
+    state = state.copyWith(
+      messages: trimmedMessages,
+      error: null,
+    );
+
+    _sendMessageInternal(lastUserMessage.content);
+  }
+
+  String _formatError(Object e) {
+    final raw = e.toString();
+    if (raw.contains('Connection refused') || raw.contains('SocketException') || raw.contains('No address')) {
+      return 'Gagal terhubung ke server. Periksa koneksi internet kamu.';
+    }
+    if (raw.contains('timeout') || raw.contains('Time out')) {
+      return 'Respons server terlalu lama. Silakan coba lagi.';
+    }
+    if (raw.contains('401') || raw.contains('Unauthorized') || raw.contains('Invalid token')) {
+      return 'Sesi kamu berakhir. Silakan login ulang.';
+    }
+    if (raw.contains('429')) {
+      return 'Terlalu banyak permintaan. Tunggu sebentar, ya.';
+    }
+    if (raw.contains('500') || raw.contains('502') || raw.contains('503')) {
+      return 'Server sedang sibuk. Silakan coba lagi nanti.';
+    }
+    // Truncate long error messages
+    if (raw.length > 150) {
+      return 'Gagal: ${raw.substring(0, 150)}...';
+    }
+    return 'Gagal: $raw';
   }
 
   Future<void> _saveMessageToSupabase(ChatMessage message) async {

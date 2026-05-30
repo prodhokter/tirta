@@ -33,11 +33,6 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<User> signInWithGoogle() async {
-    return await _remoteDatasource.signInWithGoogle();
-  }
-
-  @override
   Future<void> signOut() async {
     return await _remoteDatasource.signOut();
   }

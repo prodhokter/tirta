@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tirta/core/constants/app_colors.dart';
+import 'package:tirta/core/constants/app_routes.dart';
 import 'package:tirta/core/utils/date_formatter.dart';
 import 'package:tirta/shared/services/supabase_service.dart';
 
@@ -11,55 +13,88 @@ class GreetingHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final greeting = DateFormatter.getGreeting();
     final today = DateFormatter.formatDate(DateTime.now());
-    final userName = SupabaseService.currentUser?.userMetadata?['full_name']
-            as String? ??
-        'Pengguna';
+    final userName = SupabaseService.currentUser?.userMetadata?['full_name'] as String? ?? 'Pengguna';
+    final initial = userName.isNotEmpty ? userName[0].toUpperCase() : 'T';
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: AppColors.primary, // Solid soft pastel green
-        borderRadius: BorderRadius.circular(28.r), // Very rounded
+        color: AppColors.primary,
+        borderRadius: BorderRadius.circular(28.r),
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '$greeting,',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.textPrimary.withValues(alpha: 0.8), // Dark slate instead of white
-              fontWeight: FontWeight.w500,
+          // Text content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$greeting,',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.textPrimary.withValues(alpha: 0.8),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  userName,
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.calendar_today_outlined,
+                      size: 16.r,
+                      color: AppColors.textPrimary.withValues(alpha: 0.7),
+                    ),
+                    SizedBox(width: 6.w),
+                    Text(
+                      today,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: AppColors.textPrimary.withValues(alpha: 0.7),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 4.h),
-          Text(
-            userName,
-            style: TextStyle(
-              fontSize: 24.sp, // Slightly larger
-              color: AppColors.textPrimary, // Dark slate
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          Row(
-            children: [
-              Icon(
-                Icons.calendar_today_outlined,
-                size: 16.r,
-                color: AppColors.textPrimary.withValues(alpha: 0.7),
-              ),
-              SizedBox(width: 6.w),
-              Text(
-                today,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  color: AppColors.textPrimary.withValues(alpha: 0.7),
-                  fontWeight: FontWeight.w500,
+          // Profile avatar button
+          GestureDetector(
+            onTap: () => context.push(AppRoutes.profile),
+            child: Container(
+              width: 48.r,
+              height: 48.r,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.3),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.5),
+                  width: 2,
                 ),
               ),
-            ],
+              child: Center(
+                child: Text(
+                  initial,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

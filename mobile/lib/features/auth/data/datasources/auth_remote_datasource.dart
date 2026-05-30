@@ -13,8 +13,6 @@ abstract class AuthRemoteDatasource {
     required String password,
   });
 
-  Future<User> signInWithGoogle();
-
   Future<void> signOut();
 
   Future<void> resetPassword({required String email});
@@ -75,27 +73,6 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       throw Exception(e.message);
     } catch (e) {
       throw Exception('Terjadi kesalahan saat masuk. Coba lagi.');
-    }
-  }
-
-  @override
-  Future<User> signInWithGoogle() async {
-    try {
-      await _client.auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: 'io.supabase.flutterquickstart://login-callback',
-      );
-
-      final user = _client.auth.currentUser;
-      if (user == null) {
-        throw Exception('Gagal masuk dengan Google. Silakan coba lagi.');
-      }
-
-      return user;
-    } on AuthException catch (e) {
-      throw Exception(e.message);
-    } catch (e) {
-      throw Exception('Terjadi kesalahan saat masuk dengan Google. Coba lagi.');
     }
   }
 

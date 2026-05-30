@@ -12,8 +12,6 @@ abstract class AuthRepository {
     required String password,
   });
 
-  Future<User> signInWithGoogle();
-
   Future<void> signOut();
 
   Future<void> resetPassword({required String email});

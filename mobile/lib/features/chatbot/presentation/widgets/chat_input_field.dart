@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tirta/core/constants/app_colors.dart';
 import 'package:tirta/core/constants/app_strings.dart';
@@ -20,6 +21,18 @@ class ChatInputField extends StatefulWidget {
 class _ChatInputFieldState extends State<ChatInputField> {
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
+  bool _hasText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      final hasText = _controller.text.trim().isNotEmpty;
+      if (hasText != _hasText) {
+        setState(() => _hasText = hasText);
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -32,27 +45,35 @@ class _ChatInputFieldState extends State<ChatInputField> {
     final text = _controller.text.trim();
     if (text.isEmpty || !widget.isEnabled) return;
 
+    HapticFeedback.lightImpact();
     widget.onSubmitted(text);
     _controller.clear();
+    setState(() => _hasText = false);
   }
 
   @override
   Widget build(BuildContext context) {
+    final sendActive = _hasText && widget.isEnabled;
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      padding: EdgeInsets.fromLTRB(12.w, 8.h, 12.w, 12.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.cardBg,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8.r,
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
             offset: Offset(0, -2.h),
           ),
         ],
+        border: Border(
+          top: BorderSide(color: AppColors.divider, width: 0.5),
+        ),
       ),
       child: SafeArea(
         top: false,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: TextFormField(
@@ -61,6 +82,9 @@ class _ChatInputFieldState extends State<ChatInputField> {
                 enabled: widget.isEnabled,
                 textInputAction: TextInputAction.send,
                 onFieldSubmitted: (_) => _handleSubmit(),
+                maxLines: 4,
+                minLines: 1,
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   hintText: AppStrings.chatPlaceholder,
                   hintStyle: TextStyle(
@@ -71,25 +95,25 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   fillColor: AppColors.bgLight,
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 16.w,
-                    vertical: 12.h,
+                    vertical: 10.h,
                   ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24.r),
+                    borderRadius: BorderRadius.circular(22.r),
                     borderSide: BorderSide.none,
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24.r),
+                    borderRadius: BorderRadius.circular(22.r),
                     borderSide: BorderSide.none,
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24.r),
+                    borderRadius: BorderRadius.circular(22.r),
                     borderSide: const BorderSide(
                       color: AppColors.primaryLight,
                       width: 1.5,
                     ),
                   ),
                   disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24.r),
+                    borderRadius: BorderRadius.circular(22.r),
                     borderSide: BorderSide.none,
                   ),
                 ),
@@ -100,20 +124,36 @@ class _ChatInputFieldState extends State<ChatInputField> {
               ),
             ),
             SizedBox(width: 8.w),
-            Material(
-              color: widget.isEnabled ? AppColors.primary : AppColors.textHint,
-              borderRadius: BorderRadius.circular(24.r),
-              child: InkWell(
-                onTap: widget.isEnabled ? _handleSubmit : null,
-                borderRadius: BorderRadius.circular(24.r),
-                child: Container(
-                  width: 44.w,
-                  height: 44.h,
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.send_rounded,
-                    color: Colors.white,
-                    size: 20.sp,
+            // Send button
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              width: 44.w,
+              height: 44.h,
+              decoration: BoxDecoration(
+                color: sendActive ? AppColors.primary : AppColors.bgLight,
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(
+                  color: sendActive ? AppColors.primary : AppColors.divider,
+                  width: 1,
+                ),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: sendActive ? _handleSubmit : null,
+                  borderRadius: BorderRadius.circular(14.r),
+                  splashColor: Colors.white.withValues(alpha: 0.2),
+                  child: Center(
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      child: Icon(
+                        Icons.send_rounded,
+                        key: ValueKey(sendActive),
+                        color: sendActive ? Colors.white : AppColors.textHint,
+                        size: 20.sp,
+                      ),
+                    ),
                   ),
                 ),
               ),
